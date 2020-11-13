@@ -107,3 +107,13 @@ RegisterCommand('cfix',function(source,args,rawCommand)
 end)
 
 
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- /WEBHOOK
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+SC.WebHookMsg(wbhook, msg)
+    if wbhook ~= "" then
+        PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode({content = message}), { ['Content-Type'] = 'application/json' })
+    end
+end
+end
