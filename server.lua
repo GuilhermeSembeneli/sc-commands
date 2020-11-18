@@ -40,6 +40,32 @@ function SC.getItem(item, amount)
     end
 end
 
+function SC.CheckPerm(perm)
+    local source = source
+    local user_id = vRP.getUserId(source)
+    if vRP.hasPermission(user_id, perm) then
+        return true
+    end
+end
+
+local time = false
+RegisterServerEvent("sc:payment:radar")
+AddEventHandler("sc:payment:radar", function(pay)
+    if not time then
+        local source = source
+        local user_id = vRP.getUserId(source)
+        if vRP.hasPermission(user_id, 'policia.permissao') or vRP.hasPermission(user_id, "paramedico.permissao") then
+            return
+        else
+            vRP.setUData(user_id,"vRP:multas",parseInt(pay))
+            TriggerClientEvent("Notify", source, "success", "Acabamos de adicionar " .. parseInt(pay) .. "R$ em multas!")
+            time = true
+        end
+        SetTimeout(1000, function()
+            time = false
+        end)
+    end
+end)
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------
