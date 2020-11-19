@@ -54,11 +54,13 @@ AddEventHandler("sc:payment:radar", function(pay)
     if not time then
         local source = source
         local user_id = vRP.getUserId(source)
-        if vRP.hasPermission(user_id, 'policia.permissao') or vRP.hasPermission(user_id, "paramedico.permissao") then
+        local value = vRP.getUData(parseInt(user_id),"vRP:multas")
+        local multas = json.decode(value) or 0
+        if vRP.hasPermission(user_id, 'policia.permissao') or vRP.hasPermission(user_id, "paramedico.permissao") or vRP.getInventoryItemAmount(user_id, "placa") then
             return
         else
-            vRP.setUData(user_id,"vRP:multas",parseInt(pay))
-            TriggerClientEvent("Notify", source, "success", "Acabamos de adicionar " .. parseInt(pay) .. "R$ em multas!")
+            vRP.setUData(user_id,"vRP:multas",json.encode(parseInt(multas)+parseInt(pay)))
+            TriggerClientEvent("Notify", source, "aviso", "Acabamos de adicionar " .. parseInt(pay) .. "R$ em multas!")
             time = true
         end
         SetTimeout(1000, function()
@@ -66,7 +68,6 @@ AddEventHandler("sc:payment:radar", function(pay)
         end)
     end
 end)
-
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- /COMMANDS
